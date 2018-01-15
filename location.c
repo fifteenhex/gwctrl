@@ -26,7 +26,7 @@ static gpointer location_gps_threadfunc(gpointer data) {
 	do {
 		ret = gps_mainloop(&gpsdata, 60 * 1000000, location_gps_hook);
 		if (ret == -1) {
-			g_message("gpsd mainloop error: %s", gps_errstr(errno));
+			g_message("gpsd mainloop error (%d): %s", errno, gps_errstr(errno));
 			break;
 		}
 	} while (ret == 0);
