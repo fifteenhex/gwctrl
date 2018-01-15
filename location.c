@@ -29,6 +29,7 @@ static gpointer location_gps_threadfunc(gpointer data) {
 			g_message("gpsd mainloop error (%d): %s", errno, gps_errstr(errno));
 			break;
 		}
+		ret = 0; // ret could be -1 even though there wasn't an error
 	} while (ret == 0);
 
 	gps_close(&gpsdata);
