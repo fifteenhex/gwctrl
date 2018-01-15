@@ -7,6 +7,10 @@
 
 static void location_gps_hook(struct gps_data_t *gpsdata) {
 	g_message("have gpsd data");
+	if (gpsdata->status == STATUS_FIX && gpsdata->fix.mode >= MODE_2D) {
+		g_message("gps data lat %f lon %f", gpsdata->fix.latitude,
+				gpsdata->fix.longitude);
+	}
 }
 
 static gpointer location_gps_threadfunc(gpointer data) {
