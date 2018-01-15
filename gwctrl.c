@@ -5,6 +5,7 @@
 #include <mosquitto.h>
 
 #include "gwctrl.h"
+#include "location.h"
 
 static gboolean heartbeat(gpointer data) {
 
@@ -70,6 +71,8 @@ int main(int argc, char** argv) {
 	mosquittomainloop(&cntx.mosqcntx, mqtthost, mqttport, TRUE, NULL, NULL);
 
 	g_timeout_add(30 * 1000, heartbeat, &cntx);
+
+	location_init(&cntx);
 
 	GMainLoop* mainloop = g_main_loop_new(NULL, FALSE);
 	g_main_loop_run(mainloop);
