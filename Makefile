@@ -10,8 +10,8 @@ all: gwctrl gwctrl.stripped
 gwctrl: gwctrl.c gwctrl.h \
 		location.c location.h
 	$(MAKE) -C mosquittomainloop
-	$(CC) $(GLIB) $(JSON) $(MOSQUITTO) $(LIBGPS) $(CFLAGS) $(filter %.c,$^) -o $@ mosquittomainloop/mosquittomainloop.o
-	
+	$(CC) $(GLIB) $(JSON) $(MOSQUITTO) $(LIBGPS) $(CFLAGS) -lm $(filter %.c,$^) -o $@ mosquittomainloop/mosquittomainloop.o
+
 gwctrl.stripped: gwctrl
 	strip -o gwctrl.stripped gwctrl
 
