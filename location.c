@@ -21,6 +21,7 @@ static gpointer location_gps_threadfunc(gpointer data) {
 			sleep(60);
 		}
 	} while (ret != 0);
+	g_message("connected to gpsd");
 
 	do {
 		ret = gps_mainloop(&gpsdata, 60 * 1000000, location_gps_hook);
