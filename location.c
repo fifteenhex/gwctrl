@@ -25,7 +25,7 @@ static gpointer location_gps_threadfunc(gpointer data) {
 
 	do {
 		ret = gps_mainloop(&gpsdata, 60 * 1000000, location_gps_hook);
-		if (ret == -1) {
+		if (ret == -1 && errno != 0) { // apparently errno isn't set for a timeout?
 			g_message("gpsd mainloop error (%d): %s", errno, gps_errstr(errno));
 			break;
 		}
