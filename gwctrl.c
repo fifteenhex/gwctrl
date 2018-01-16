@@ -15,6 +15,15 @@ static gboolean heartbeat(gpointer data) {
 		JsonBuilder* jsonbuilder = json_builder_new_immutable();
 		json_builder_begin_object(jsonbuilder);
 
+		if (cntx->location.valid) {
+			json_builder_set_member_name(jsonbuilder, "location");
+			json_builder_begin_object(jsonbuilder);
+			json_builder_set_member_name(jsonbuilder, "lat");
+			json_builder_add_double_value(jsonbuilder, cntx->location.lat);
+			json_builder_set_member_name(jsonbuilder, "lon");
+			json_builder_add_double_value(jsonbuilder, cntx->location.lon);
+			json_builder_end_object(jsonbuilder);
+		}
 		json_builder_end_object(jsonbuilder);
 
 		JsonNode* root = json_builder_get_root(jsonbuilder);
