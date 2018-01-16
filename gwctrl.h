@@ -8,6 +8,7 @@
 struct location {
 	gboolean valid;
 	double lat, lon;
+	guint64 timestamp;
 };
 
 struct context {

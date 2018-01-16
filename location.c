@@ -8,12 +8,13 @@
 static struct location* location; //ugh!
 
 static void location_gps_hook(struct gps_data_t *gpsdata) {
-	g_message("have gpsd data");
+	guint64 now = g_get_monotonic_time();
 	if (gpsdata->status == STATUS_FIX && gpsdata->fix.mode >= MODE_2D) {
 		g_message("gps data lat %f lon %f", gpsdata->fix.latitude,
 				gpsdata->fix.longitude);
 		location->lat = gpsdata->fix.latitude;
 		location->lon = gpsdata->fix.longitude;
+		location->timestamp = now;
 		location->valid = TRUE;
 	}
 }
