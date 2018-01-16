@@ -9,6 +9,11 @@ static struct location* location; //ugh!
 
 static void location_gps_hook(struct gps_data_t *gpsdata) {
 	guint64 now = g_get_monotonic_time();
+
+	// skip if we have a valid location from less than a minute ago
+	if (location->valid && ((now - location->timestamp) < (60 * 1000000)))
+		return;
+
 	if (gpsdata->status == STATUS_FIX && gpsdata->fix.mode >= MODE_2D) {
 		g_message("gps data lat %f lon %f", gpsdata->fix.latitude,
 				gpsdata->fix.longitude);
@@ -36,12 +41,15 @@ static gpointer location_gps_threadfunc(gpointer data) {
 	g_message("connected to gpsd");
 
 	do {
-		ret = gps_mainloop(&gpsdata, 60 * 1000000, location_gps_hook);
+		ret = gps_mainloop(&gpsdata, 1 * 1000000, location_gps_hook);
 		if (ret == -1 && errno != 0) { // apparently errno isn't set for a timeout?
 			g_message("gpsd mainloop error (%d): %s", errno, gps_errstr(errno));
 			break;
 		}
 		ret = 0; // ret could be -1 even though there wasn't an error
+		// quick fix for cpu hogging
+		sleep(5);
+
 	} while (ret == 0);
 
 	gps_close(&gpsdata);
