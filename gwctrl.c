@@ -11,7 +11,7 @@ static gboolean heartbeat(gpointer data) {
 
 	struct context* cntx = data;
 
-	if (cntx->mosqcntx.connected) {
+	if (mosquitto_client_isconnected(cntx->mosqclient)) {
 		JsonBuilder* jsonbuilder = json_builder_new_immutable();
 		json_builder_begin_object(jsonbuilder);
 
@@ -43,8 +43,9 @@ static gboolean heartbeat(gpointer data) {
 
 		gchar* topic = g_string_free(topicstr, FALSE);
 
-		mosquitto_publish(cntx->mosqcntx.mosq, NULL, topic, jsonlen, json, 0,
-		FALSE);
+		mosquitto_publish(
+				mosquitto_client_getmosquittoinstance(cntx->mosqclient), NULL,
+				topic, jsonlen, json, 0, FALSE);
 	}
 
 	return TRUE;
@@ -56,8 +57,12 @@ int main(int argc, char** argv) {
 	struct context cntx = { 0 };
 
 	gchar* gwid = NULL;
+	gchar* mqttid = NULL;
 	gchar* mqtthost = "localhost";
 	gint mqttport = 1883;
+	gchar* mqttrootcert = NULL;
+	gchar* mqttdevicecert = NULL;
+	gchar* mqttdevicekey = NULL;
 
 	GOptionEntry entries[] = {
 	MQTTOPTS, { "gatewayid", 'i', 0, G_OPTION_ARG_STRING, &gwid, "", "" }, {
@@ -77,7 +82,8 @@ int main(int argc, char** argv) {
 	} else
 		cntx.gwid = gwid;
 
-	mosquittomainloop(&cntx.mosqcntx, mqtthost, mqttport, TRUE, NULL, NULL);
+	cntx.mosqclient = mosquitto_client_new_plaintext(mqttid, mqtthost,
+			mqttport);
 
 	g_timeout_add(30 * 1000, heartbeat, &cntx);
 

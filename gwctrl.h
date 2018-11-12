@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mosquittomainloop/mosquittomainloop.h"
+#include <mosquittomainloop.h>
 
 #define TOPICROOT			"gwctrl"
 #define SUBTOPIC_HEARTBEAT	"heartbeat"
@@ -12,7 +12,7 @@ struct location {
 };
 
 struct context {
-	struct mosquitto_context mosqcntx;
+	MosquittoClient* mosqclient;
 	gchar* gwid;
 	struct location location;
 };
