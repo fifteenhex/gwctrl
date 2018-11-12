@@ -24,7 +24,11 @@ static gpointer location_gps_threadfunc(gpointer data) {
 
 	do {
 		if (gps_waiting(&gpsdata, 500)) {
+#if (GPSD_API_MAJOR_VERSION < 7)
 			if (gps_read(&gpsdata) == -1) {
+#else
+			if (gps_read(&gpsdata, NULL, 0) == -1) {
+#endif
 				g_message("gpsd mainloop error (%d): %s", errno,
 						gps_errstr(errno));
 				break;
