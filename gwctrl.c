@@ -34,6 +34,7 @@ static gboolean heartbeat(gpointer data) {
 		gchar* json = json_generator_to_data(generator, &jsonlen);
 		json_node_free(root);
 		g_object_unref(generator);
+		g_object_unref(jsonbuilder);
 
 		GString* topicstr = g_string_new(TOPICROOT);
 		g_string_append(topicstr, "/");
@@ -46,9 +47,17 @@ static gboolean heartbeat(gpointer data) {
 		mosquitto_publish(
 				mosquitto_client_getmosquittoinstance(cntx->mosqclient), NULL,
 				topic, jsonlen, json, 0, FALSE);
+
+		g_free(topic);
+		g_free(json);
 	}
 
 	return TRUE;
+}
+
+static gboolean connectedcallback(MosquittoClient* client, void* something,
+		gpointer user_data) {
+	return heartbeat(user_data);
 }
 
 int main(int argc, char** argv) {
@@ -86,6 +95,9 @@ int main(int argc, char** argv) {
 			mqttport);
 
 	g_timeout_add(30 * 1000, heartbeat, &cntx);
+
+	g_signal_connect(cntx.mosqclient, MOSQUITTO_CLIENT_SIGNAL_CONNECTED,
+			connectedcallback, &cntx);
 
 	location_init(&cntx);
 
