@@ -6,6 +6,7 @@
 
 #include "gwctrl.h"
 #include "location.h"
+#include "json-glib-macros/jsonbuilderutils.h"
 
 static gboolean heartbeat(gpointer data) {
 
@@ -26,15 +27,8 @@ static gboolean heartbeat(gpointer data) {
 		}
 		json_builder_end_object(jsonbuilder);
 
-		JsonNode* root = json_builder_get_root(jsonbuilder);
-		JsonGenerator* generator = json_generator_new();
-		json_generator_set_root(generator, root);
-
 		gsize jsonlen;
-		gchar* json = json_generator_to_data(generator, &jsonlen);
-		json_node_free(root);
-		g_object_unref(generator);
-		g_object_unref(jsonbuilder);
+		gchar* json = jsonbuilder_freetostring(jsonbuilder, &jsonlen, TRUE);
 
 		GString* topicstr = g_string_new(TOPICROOT);
 		g_string_append(topicstr, "/");
@@ -97,7 +91,7 @@ int main(int argc, char** argv) {
 	g_timeout_add(30 * 1000, heartbeat, &cntx);
 
 	g_signal_connect(cntx.mosqclient, MOSQUITTO_CLIENT_SIGNAL_CONNECTED,
-			connectedcallback, &cntx);
+			(GCallback )connectedcallback, &cntx);
 
 	location_init(&cntx);
 
