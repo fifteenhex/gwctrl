@@ -6,6 +6,7 @@
 
 #include "gwctrl.h"
 #include "location.h"
+#include "thermal.h"
 #include "json-glib-macros/jsonbuilderutils.h"
 
 static gboolean heartbeat(gpointer data) {
@@ -17,14 +18,16 @@ static gboolean heartbeat(gpointer data) {
 		json_builder_begin_object(jsonbuilder);
 
 		if (cntx->location.valid) {
-			json_builder_set_member_name(jsonbuilder, "location");
-			json_builder_begin_object(jsonbuilder);
+			JSONBUILDER_START_OBJECT(jsonbuilder, "location");
 			json_builder_set_member_name(jsonbuilder, "lat");
 			json_builder_add_double_value(jsonbuilder, cntx->location.lat);
 			json_builder_set_member_name(jsonbuilder, "lon");
 			json_builder_add_double_value(jsonbuilder, cntx->location.lon);
 			json_builder_end_object(jsonbuilder);
 		}
+
+		thermal_heartbeat(&cntx->thermal, jsonbuilder);
+
 		json_builder_end_object(jsonbuilder);
 
 		gsize jsonlen;
@@ -94,6 +97,7 @@ int main(int argc, char** argv) {
 			(GCallback )connectedcallback, &cntx);
 
 	location_init(&cntx);
+	thermal_init(&cntx.thermal);
 
 	GMainLoop* mainloop = g_main_loop_new(NULL, FALSE);
 	g_main_loop_run(mainloop);
