@@ -11,7 +11,9 @@ void thermal_init(struct thermal* t) {
 		GRegex* thermregex = g_regex_new(W1THERMPATTERN, 0, 0, NULL);
 		const gchar* node;
 		while ((node = g_dir_read_name(w1devices)) != NULL) {
+			g_message("checking %s for w1 thermal sensor", node);
 			if (g_regex_match(thermregex, node, 0, NULL)) {
+				g_message("found sensor at %s", node);
 				struct sensor* s = g_malloc(sizeof(*s));
 				s->name = g_strdup(node);
 				s->millidegrees = 0;
@@ -21,7 +23,8 @@ void thermal_init(struct thermal* t) {
 		g_dir_close(w1devices);
 		g_regex_unref(thermregex);
 
-	}
+	} else
+		g_message("couldn't open w1 devices sysfs directory, w1 not enabled?");
 }
 
 void sensorfunc(gpointer data, gpointer user_data) {
