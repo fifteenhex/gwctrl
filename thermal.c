@@ -51,6 +51,7 @@ static gboolean readsensor(const gchar* sensor, int* reading) {
 			g_match_info_next(matches, NULL);
 		}
 		g_match_info_free(matches);
+		g_free(data);
 	} else
 		g_message("failed to read sensor %s", sensor);
 	g_free(path);
