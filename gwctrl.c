@@ -46,12 +46,15 @@ static gboolean heartbeat(gpointer data) {
 
 static gboolean connectedcallback(MosquittoClient* client, void* something,
 		gpointer user_data) {
-
 	struct context* cntx = user_data;
-
 	ctrl_onconnected(cntx->gwid, cntx->mosqclient);
-
 	return heartbeat(user_data);
+}
+
+static gboolean messagecallback(MosquittoClient* client,
+		const struct mosquitto_message* msg, gpointer user_data) {
+	ctrl_onmessage(client, msg);
+	return TRUE;
 }
 
 int main(int argc, char** argv) {
@@ -92,6 +95,8 @@ int main(int argc, char** argv) {
 
 	g_signal_connect(cntx.mosqclient, MOSQUITTO_CLIENT_SIGNAL_CONNECTED,
 			(GCallback )connectedcallback, &cntx);
+	g_signal_connect(cntx.mosqclient, MOSQUITTO_CLIENT_SIGNAL_MESSAGE,
+			(GCallback ) messagecallback, &cntx);
 
 	location_init(&cntx.location);
 	thermal_init(&cntx.thermal);

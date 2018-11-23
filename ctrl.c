@@ -1,3 +1,5 @@
+#include <sys/reboot.h>
+
 #include "ctrl.h"
 #include "gwctrl.h"
 
@@ -11,4 +13,20 @@ void ctrl_onconnected(const gchar* gwid, MosquittoClient* client) {
 	mosquitto_subscribe(mosquitto_client_getmosquittoinstance(client),
 	NULL, topic, 0);
 	g_free(topic);
+}
+
+void ctrl_onmessage(MosquittoClient* client,
+		const struct mosquitto_message* msg) {
+	char** splittopic;
+	int count;
+	mosquitto_sub_topic_tokenise(msg->topic, &splittopic, &count);
+
+	if (strcmp(splittopic[count - 2], SUBTOPIC_CTRL) == 0) {
+		if (strcmp(splittopic[count - 1], "reboot") == 0) {
+			g_message("reboot requested");
+			reboot(RB_AUTOBOOT);
+		}
+	}
+
+	mosquitto_sub_topic_tokens_free(&splittopic, count);
 }
