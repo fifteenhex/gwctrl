@@ -3,11 +3,12 @@
 #include <glib.h>
 #include <json-glib/json-glib.h>
 
+#include "json-glib-macros/jsonbuilderutils.h"
 #include "gwctrl.h"
 #include "location.h"
 #include "thermal.h"
-#include "json-glib-macros/jsonbuilderutils.h"
 #include "ctrl.h"
+#include "sysinfo.h"
 
 static gboolean heartbeat(gpointer data) {
 
@@ -19,6 +20,7 @@ static gboolean heartbeat(gpointer data) {
 
 		location_heartbeat(&cntx->location, jsonbuilder);
 		thermal_heartbeat(&cntx->thermal, jsonbuilder);
+		sysinfo_heartbeat(jsonbuilder);
 
 		json_builder_end_object(jsonbuilder);
 

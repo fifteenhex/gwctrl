@@ -7,7 +7,8 @@ cc = meson.get_compiler('c')
 src = ['gwctrl.c',
        'location.c',
        'thermal.c',
-       'ctrl.c']
+       'ctrl.c',
+       'sysinfo.c']
 
 deps = [ dependency('glib-2.0'),
          dependency('json-glib-1.0'),
