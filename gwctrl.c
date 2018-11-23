@@ -2,12 +2,12 @@
 
 #include <glib.h>
 #include <json-glib/json-glib.h>
-#include <mosquitto.h>
 
 #include "gwctrl.h"
 #include "location.h"
 #include "thermal.h"
 #include "json-glib-macros/jsonbuilderutils.h"
+#include "ctrl.h"
 
 static gboolean heartbeat(gpointer data) {
 
@@ -46,6 +46,11 @@ static gboolean heartbeat(gpointer data) {
 
 static gboolean connectedcallback(MosquittoClient* client, void* something,
 		gpointer user_data) {
+
+	struct context* cntx = user_data;
+
+	ctrl_onconnected(cntx->gwid, cntx->mosqclient);
+
 	return heartbeat(user_data);
 }
 

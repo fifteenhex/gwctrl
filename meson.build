@@ -4,7 +4,10 @@ mosquittomainloop = subproject('mosquittomainloop')
 
 cc = meson.get_compiler('c')
 
-src = ['gwctrl.c', 'location.c', 'thermal.c']
+src = ['gwctrl.c',
+       'location.c',
+       'thermal.c',
+       'ctrl.c']
 
 deps = [ dependency('glib-2.0'),
          dependency('json-glib-1.0'),

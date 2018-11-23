@@ -6,6 +6,7 @@
 
 #define TOPICROOT			"gwctrl"
 #define SUBTOPIC_HEARTBEAT	"heartbeat"
+#define SUBTOPIC_CTRL		"ctrl"
 
 struct context {
 	MosquittoClient* mosqclient;
