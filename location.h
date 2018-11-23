@@ -1,5 +1,13 @@
 #pragma once
 
-#include "gwctrl.h"
+#include <glib.h>
+#include <json-glib/json-glib.h>
 
-void location_init(struct context* cntx);
+struct location {
+	gboolean valid;
+	double lat, lon;
+	guint64 timestamp;
+};
+
+void location_init(struct location* location);
+void location_heartbeat(struct location* location, JsonBuilder* jsonbuilder);

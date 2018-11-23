@@ -17,15 +17,7 @@ static gboolean heartbeat(gpointer data) {
 		JsonBuilder* jsonbuilder = json_builder_new_immutable();
 		json_builder_begin_object(jsonbuilder);
 
-		if (cntx->location.valid) {
-			JSONBUILDER_START_OBJECT(jsonbuilder, "location");
-			json_builder_set_member_name(jsonbuilder, "lat");
-			json_builder_add_double_value(jsonbuilder, cntx->location.lat);
-			json_builder_set_member_name(jsonbuilder, "lon");
-			json_builder_add_double_value(jsonbuilder, cntx->location.lon);
-			json_builder_end_object(jsonbuilder);
-		}
-
+		location_heartbeat(&cntx->location, jsonbuilder);
 		thermal_heartbeat(&cntx->thermal, jsonbuilder);
 
 		json_builder_end_object(jsonbuilder);
@@ -96,7 +88,7 @@ int main(int argc, char** argv) {
 	g_signal_connect(cntx.mosqclient, MOSQUITTO_CLIENT_SIGNAL_CONNECTED,
 			(GCallback )connectedcallback, &cntx);
 
-	location_init(&cntx);
+	location_init(&cntx.location);
 	thermal_init(&cntx.thermal);
 
 	GMainLoop* mainloop = g_main_loop_new(NULL, FALSE);

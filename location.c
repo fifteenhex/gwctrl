@@ -4,10 +4,11 @@
 #include <unistd.h>
 
 #include "location.h"
+#include "json-glib-macros/jsonbuilderutils.h"
 
 static gpointer location_gps_threadfunc(gpointer data) {
 
-	struct context* cntx = data;
+	struct location* location = data;
 
 	int ret;
 	struct gps_data_t gpsdata;
@@ -36,10 +37,10 @@ static gpointer location_gps_threadfunc(gpointer data) {
 				if (gpsdata.status == STATUS_FIX && gpsdata.fix.mode >= MODE_2D) {
 					g_message("gps data lat %f lon %f", gpsdata.fix.latitude,
 							gpsdata.fix.longitude);
-					cntx->location.lat = gpsdata.fix.latitude;
-					cntx->location.lon = gpsdata.fix.longitude;
-					cntx->location.timestamp = g_get_monotonic_time();
-					cntx->location.valid = TRUE;
+					location->lat = gpsdata.fix.latitude;
+					location->lon = gpsdata.fix.longitude;
+					location->timestamp = g_get_monotonic_time();
+					location->valid = TRUE;
 				}
 			}
 		}
@@ -51,6 +52,15 @@ static gpointer location_gps_threadfunc(gpointer data) {
 	return NULL;
 }
 
-void location_init(struct context* cntx) {
-	g_thread_new("location_gps", location_gps_threadfunc, cntx);
+void location_heartbeat(struct location* location, JsonBuilder* jsonbuilder) {
+	if (location->valid) {
+		JSONBUILDER_START_OBJECT(jsonbuilder, "location");
+		JSONBUILDER_ADD_DOUBLE(jsonbuilder, "lat", location->lat);
+		JSONBUILDER_ADD_DOUBLE(jsonbuilder, "lon", location->lon);
+		json_builder_end_object(jsonbuilder);
+	}
+}
+
+void location_init(struct location* location) {
+	g_thread_new("location_gps", location_gps_threadfunc, location);
 }
