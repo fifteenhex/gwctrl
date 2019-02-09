@@ -4,3 +4,6 @@
 [submodule "json-glib-macros"]
 	path = json-glib-macros
 	url = https://github.com/fifteenhex/json-glib-macros.git
+[submodule "subprojects/nodectrl"]
+	path = subprojects/nodectrl
+	url = git@github.com:fifteenhex/nodectrl.git
