@@ -6,6 +6,7 @@
 #include <nodectrl/location.h>
 #include <nodectrl/thermal.h>
 #include <nodectrl/sysinfo.h>
+#include <nodectrl/reboot.h>
 
 #include "ctrl.h"
 
@@ -45,6 +46,7 @@ int main(int argc, char** argv) {
 	nodectrl_mainloop_heartbeat_add(nodectrl, &sysinfo_hb);
 	nodectrl_mainloop_heartbeat_add(nodectrl, &thermal_hb);
 	nodectrl_mainloop_heartbeat_add(nodectrl, &location_hb);
+	nodectrl_mainloop_control_add(nodectrl, &reboot_ctrl);
 
 	nodectrl_mainloop_run(nodectrl);
 
