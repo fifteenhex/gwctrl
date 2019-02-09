@@ -1,6 +1,6 @@
 #pragma once
 
-#include <mosquittomainloop.h>
+#include <mosquitto_client.h>
 
 void ctrl_onconnected(const gchar* gwid, MosquittoClient* client);
 void ctrl_onmessage(MosquittoClient* client,

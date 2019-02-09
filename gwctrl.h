@@ -1,6 +1,6 @@
 #pragma once
 
-#include <mosquittomainloop.h>
+#include <mosquitto_client.h>
 #include "location.h"
 #include "thermal.h"
 

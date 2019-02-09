@@ -1,6 +1,6 @@
 project('gwctrl', 'c')
 
-mosquittomainloop = subproject('mosquittomainloop')
+mosquitto_glib = subproject('mosquitto_glib')
 
 cc = meson.get_compiler('c')
 
@@ -14,7 +14,7 @@ deps = [ dependency('glib-2.0'),
          dependency('json-glib-1.0'),
          dependency('libgps'),
          cc.find_library('m'),
-         mosquittomainloop.get_variable('mosquittomainloop_dep')]
+         mosquitto_glib.get_variable('mosquitto_glib_dep')]
 
 executable('gwctrl', src, 
            dependencies : deps, 
