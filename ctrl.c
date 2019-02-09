@@ -1,10 +1,10 @@
 #include <sys/reboot.h>
 
 #include "ctrl.h"
-#include "gwctrl.h"
 
-void ctrl_onconnected(const gchar* gwid, MosquittoClient* client) {
-	GString* topicstr = g_string_new(TOPICROOT);
+void ctrl_onconnected(const gchar* topicroot, const gchar* gwid,
+		MosquittoClient* client) {
+	GString* topicstr = g_string_new(topicroot);
 	g_string_append(topicstr, "/");
 	g_string_append(topicstr, gwid);
 	g_string_append(topicstr, "/");
