@@ -13,5 +13,8 @@ before_install:
   - docker pull debian:testing
 
 script:
-  - docker build -t withgit .
+  - docker build -f ci/Dockerfile -t withgit .
   - docker run withgit /bin/sh -c "cd /root && TRAVIS=true CC=$CC CXX=$CXX meson builddir && ninja -C builddir"
+
+after_success:
+  - ci/travisscripts/tagdev.sh ci/deploy_key.enc $encrypted_ccfa6ffdaa1b_key $encrypted_ccfa6ffdaa1b_iv

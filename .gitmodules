@@ -7,3 +7,6 @@
 [submodule "subprojects/nodectrl"]
 	path = subprojects/nodectrl
 	url = https://github.com/fifteenhex/nodectrl.git
+[submodule "ci/travisscripts"]
+	path = ci/travisscripts
+	url = https://github.com/fifteenhex/travisscripts
