@@ -23,8 +23,8 @@ int main(int argc, char** argv) {
 	gchar* mqttdevicecert = NULL;
 	gchar* mqttdevicekey = NULL;
 
-	gboolean nodectrl_safemode;
-	gchar* nodectrl_controlca;
+	gboolean nodectrl_safemode = FALSE;
+	gchar* nodectrl_controlca = NULL;
 
 	GOptionEntry entries[] = {
 	MQTTOPTS, NODECTRL_OPTS, { "gatewayid", 'i', 0, G_OPTION_ARG_STRING, &gwid,
