@@ -23,8 +23,12 @@ int main(int argc, char** argv) {
 	gchar* mqttdevicecert = NULL;
 	gchar* mqttdevicekey = NULL;
 
+	gboolean nodectrl_safemode;
+	gchar* nodectrl_controlca;
+
 	GOptionEntry entries[] = {
-	MQTTOPTS, { "gatewayid", 'i', 0, G_OPTION_ARG_STRING, &gwid, "", "" }, {
+	MQTTOPTS, NODECTRL_OPTS, { "gatewayid", 'i', 0, G_OPTION_ARG_STRING, &gwid,
+			"", "" }, {
 	NULL } };
 
 	GOptionContext* context = g_option_context_new("");
@@ -41,7 +45,7 @@ int main(int argc, char** argv) {
 	}
 
 	struct nodectrl* nodectrl = nodectrl_mainloop_new(TOPICROOT, gwid, mqttid,
-			mqtthost, mqttport);
+			mqtthost, mqttport, nodectrl_safemode);
 
 	nodectrl_mainloop_heartbeat_add(nodectrl, &sysinfo_hb);
 	nodectrl_mainloop_heartbeat_add(nodectrl, &thermal_hb);
