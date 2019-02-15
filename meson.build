@@ -5,8 +5,7 @@ nodectrl = subproject('nodectrl')
 
 cc = meson.get_compiler('c')
 
-src = ['gwctrl.c',
-       'ctrl.c']
+src = ['gwctrl.c']
 
 deps = [ dependency('glib-2.0'),
          dependency('json-glib-1.0'),

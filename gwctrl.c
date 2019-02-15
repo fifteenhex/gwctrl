@@ -8,8 +8,6 @@
 #include <nodectrl/sysinfo.h>
 #include <nodectrl/reboot.h>
 
-#include "ctrl.h"
-
 #define TOPICROOT "gwctrl"
 
 int main(int argc, char** argv) {
